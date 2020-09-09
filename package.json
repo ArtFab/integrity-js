@@ -1,0 +1,19 @@
+{
+  "name": "integrity-check",
+  "version": "1.2.0",
+  "description": "Runtime integrity checking for node.js programs and broswer javascript programs",
+  "main": "integrity-test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArtFab/integrity-js.git"
+  },
+  "author": "ArtFab",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArtFab/integrity-js/issues"
+  },
+  "homepage": "https://github.com/ArtFab/integrity-js#readme"
+}
