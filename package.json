@@ -2,7 +2,7 @@
   "name": "integrity-check",
   "version": "1.3.0",
   "description": "Runtime integrity checking for node.js programs and broswer javascript programs",
-  "main": "integrity-test.js",
+  "main": "integrity.js",
   "scripts": {
     "test": "node integrity-test"
   },
