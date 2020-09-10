@@ -4,7 +4,7 @@
   "description": "Runtime integrity checking for node.js programs and broswer javascript programs",
   "main": "integrity-test.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node integrity-test"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,6 @@
   "bugs": {
     "url": "https://github.com/ArtFab/integrity-js/issues"
   },
-  "homepage": "https://github.com/ArtFab/integrity-js#readme"
+  "homepage": "https://github.com/ArtFab/integrity-js#readme",
+  "dependencies": {}
 }
