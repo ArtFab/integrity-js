@@ -1,3 +1,4 @@
+"use strict";
 
 class IntegrityException extends Error {
     constructor(message, clipFunction) {
@@ -56,13 +57,9 @@ class IllegalTypeException extends IntegrityException {
     }
 }
 
-class BlankStringException extends Error {
-    constructor(...params) {
-        super(...params);
-
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, BlankStringException);
-        }
+class BlankStringException extends IntegrityException {
+    constructor(message, clipFunction) {
+        super(message, clipFunction);
     }
 }
 
@@ -73,7 +70,7 @@ class Integrity {
         Integrity.checkIsBool(test);
 
         if (!test) {
-            throw new IntegrityException(Integrity._msg("Integrity test failed", msg));
+            throw new IntegrityException(Integrity._msg("Integrity test failed", msg), Integrity.check);
         }
     }
 
@@ -86,7 +83,12 @@ class Integrity {
             } else {
                 text = Integrity._msg('', msg);
             }
-            throw new IllegalTypeException(text, this.checkIsBool);
+
+            if (test === undefined || test === null) {
+                throw new NullPointerException(text, Integrity.checkIsBool);
+            }
+
+            throw new IllegalTypeException(text, Integrity.checkIsBool);
         }
     }
 
@@ -101,9 +103,9 @@ class Integrity {
 
     static checkNotNull(test, ...msg) {
         if (test === undefined) {
-            throw new NullPointerException(Integrity._msg('Integrity test failed: Undefined variable encountered', msg), this.checkNotNull);
+            throw new NullPointerException(Integrity._msg('Integrity test failed: Undefined encountered', msg), this.checkNotNull);
         } else if(test === null) {
-            throw new NullPointerException(Integrity._msg('Integrity test failed: Null variable encountered', msg), this.checkNotNull);
+            throw new NullPointerException(Integrity._msg('Integrity test failed: Null encountered', msg), this.checkNotNull);
         }
     }
 
@@ -118,7 +120,12 @@ class Integrity {
             } else {
                 text = Integrity._msg('', msg);
             }
-            throw new IllegalTypeException(text, this.checkIsValidNumber);
+
+            if (test === undefined || test === null) {
+                throw new NullPointerException(text, Integrity.checkIsBool);
+            }
+
+            throw new IllegalTypeException(text, Integrity.checkIsValidNumber);
         }
     }
 
@@ -131,14 +138,6 @@ class Integrity {
         Integrity.checkIsValidNumber(test, ...msg);
     }
 
-    static checkIsStringOrNull(s, ...msg) {
-        if (s === undefined || s === null) {
-            return;
-        }
-
-        Integrity.checkIsString(s, ...msg);
-    }
-
     static checkIsString(s, ...msg) {
         if (typeof s === 'string') {
             return;
@@ -149,21 +148,28 @@ class Integrity {
         } else {
             text = Integrity._msg('', msg);
         }
-        throw new IllegalTypeException(text, this.checkIsString);
+
+        if (s === undefined || s === null) {
+            throw new NullPointerException(text, Integrity.checkIsBool);
+        }
+
+        throw new IllegalTypeException(text, Integrity.checkIsString);
+    }
+
+    static checkIsStringOrNull(s, ...msg) {
+        if (s === undefined || s === null) {
+            return;
+        }
+
+        Integrity.checkIsString(s, ...msg);
     }
 
     static checkStringNotNullOrEmpty(s, ...msg) {
-        if (s === undefined) {
-            throw new NullPointerException(Integrity._msg('Undefined string', msg));
-        }
-        if (s === null) {
-            throw new NullPointerException(Integrity._msg('Null string', msg), this.checkStringNotNullOrEmpty);
-        }
 
         Integrity.checkIsString(s, ...msg);
 
         if (s === '') {
-            throw new EmptyStringException(Integrity._msg('Empty string', msg), this.checkStringNotNullOrEmpty);
+            throw new EmptyStringException(Integrity._msg('Empty string', msg), Integrity.checkStringNotNullOrEmpty);
         }
     }
 
@@ -190,6 +196,7 @@ class Integrity {
             return Integrity._expandMessageArray(...messageArray)
         }
     }
+
     static _expandMessageArray() {
         if (arguments.length == 0) {
             return 'Integrity test failed';
@@ -197,10 +204,14 @@ class Integrity {
 
         try {
             //console.log(msg);
-            var s = arguments[0];
+            var s = '' + arguments[0];
             if (arguments.length > 1) {
                 for (var i = 1; i < arguments.length; i++) {
-                    s = s.replace('{}', '' + arguments[i]);
+                    if (s.indexOf('{}') == -1) {
+                        s += ", '" + arguments[i] + "'";
+                    } else {
+                        s = s.replace('{}', '' + arguments[i]);
+                    }
                 }
             }
         } catch (x) {

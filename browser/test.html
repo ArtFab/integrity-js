@@ -1,0 +1,164 @@
+<html>
+<head>
+    <title>Integrity check test</title>
+    <script src="integrity-check.js"></script>
+    <script>
+
+        function log(s) {
+            const out = document.getElementById('out');
+            out.innerHTML += s + '\n';
+        }
+
+        function fail(x) {
+            log(x)
+            console.log(x)
+            log("TESTS FAILED")
+        }
+
+        const throwingTests = [
+            () => {
+                Integrity.check(1)
+            },
+            () => {
+                Integrity.check("1")
+            },
+            () => {
+                Integrity.checkIsBool(0, "oop{}", "sies");
+            },
+            () => {
+                Integrity.checkIsBool(null);
+            },
+            () => {
+                Integrity.checkIsBool(undefined);
+            },
+            () => {
+                Integrity.checkIsBool(NaN);
+            },
+            () => {
+                Integrity.checkIsBoolOrNull(Infinity, "{}", "infinity", 1, 2);
+            },
+            () => {
+                Integrity.checkIsBoolOrNull('');
+            },
+            () => {
+                Integrity.checkNotNull(null);
+            },
+            () => {
+                Integrity.checkNotNull(undefined);
+            },
+            () => {
+                Integrity.checkNotNull(null, "a", 1, 2);
+            },
+            () => {
+                Integrity.checkNotNull(null, "a{}{}", 1, 2);
+            },
+            () => {
+                Integrity.checkNotNull(null, "a{}{}", 1, 2);
+            },
+            () => {
+                Integrity.checkIsValidNumber(NaN);
+            },
+            () => {
+                Integrity.checkIsValidNumber(Infinity, 1, 2, 3);
+            },
+            () => {
+                Integrity.checkIsValidNumber(null);
+            },
+            () => {
+                Integrity.checkIsValidNumber(undefined);
+            },
+            () => {
+                Integrity.checkIsValidNumber('0');
+            },
+            () => {
+                Integrity.checkIsValidNumber(true);
+            },
+            () => {
+                Integrity.checkIsString(undefined);
+            },
+            () => {
+                Integrity.checkIsString(null);
+            },
+            () => {
+                Integrity.checkIsString(true, "a", "b");
+            },
+            () => {
+                Integrity.checkIsStringOrNull(true);
+            },
+            () => {
+                Integrity.checkIsStringOrNull(NaN);
+            },
+            () => {
+                Integrity.checkIsStringOrNull(1, "1", 1);
+            },
+            () => {
+                Integrity.checkStringNotNullOrEmpty(1, "1 is not a string");
+            },
+            () => {
+                Integrity.checkStringNotNullOrEmpty('', "Empty {}", "string");
+            },
+            () => {
+                Integrity.checkStringNotNullOrEmpty(null, "null {}", "string");
+            },
+            () => {
+                Integrity.checkStringNotNullOrEmpty(undefined, "undefined {}", "string");
+            },
+        ]
+
+        function runTests() {
+            log("start...")
+
+            // These should all pass...
+            try {
+                Integrity.check(1 == 1, "oops{}", "ies");
+                Integrity.checkIsBool(true);
+                Integrity.checkIsBoolOrNull(null);
+                Integrity.checkIsBoolOrNull(undefined);
+                Integrity.checkNotNull(0)
+                Integrity.checkNotNull(NaN)
+                Integrity.checkNotNull(Infinity)
+                Integrity.checkNotNull('')
+                Integrity.checkIsValidNumber(0)
+                Integrity.checkIsValidNumber(-1)
+                Integrity.checkIsString("")
+                Integrity.checkIsString('0')
+                Integrity.checkIsStringOrNull(null)
+                Integrity.checkIsStringOrNull(undefined)
+                Integrity.checkStringNotNullOrEmpty('a')
+                Integrity.checkStringNotNullOrEmpty('0')
+
+            } catch (x) {
+                fail(x);
+                return;
+            }
+
+            // These should all throw an exception:
+
+
+            for (i = 0; i < throwingTests.length; i++) {
+                let throwTest = throwingTests[i]
+                try {
+                    throwTest()
+                    fail("Test " + i + " failed to throw exception when it should have: " + throwTest)
+                    return
+                } catch (x) {
+                    log("pass: " + x.name + '\t' + x.message);
+                }
+            }
+
+            log("\nTESTS PASSED\n...finished")
+
+        }
+    </script>
+</head>
+<body>
+    This is a test of the integrity-check.js file<br/>
+    
+    <textarea id="out" cols="160" rows="40" style="background-color:black;color:#00ff00"></textarea>
+    
+    <script>
+        runTests();
+    </script>
+
+</body>
+</html>

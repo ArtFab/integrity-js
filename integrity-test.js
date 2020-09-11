@@ -95,7 +95,7 @@ expectException(() => {
 expectException(() => {
     let a1 = 1;
     Integrity.check(a1 = null);
-}, Integrity.IllegalTypeException, "Expected boolean, but was null");
+}, Integrity.NullPointerException, "Expected boolean, but was null");
 
 expectException(() => {
     Integrity.check(one == 2, 'expected 2 but got {}', one);
@@ -200,7 +200,7 @@ expectException(() => {
 expectException(() => {
     var undefinedVariable;
     Integrity.checkNotNull(undefinedVariable);
-}, Integrity.NullPointerException, 'Integrity test failed: Undefined variable encountered');
+}, Integrity.NullPointerException, 'Integrity test failed: Undefined encountered');
 
 expectException(() => {
     var undefinedVariable;
@@ -210,7 +210,7 @@ expectException(() => {
 expectException(() => {
     var nullVar = null;
     Integrity.checkNotNull(nullVar);
-}, Integrity.NullPointerException, 'Integrity test failed: Null variable encountered');
+}, Integrity.NullPointerException, 'Integrity test failed: Null encountered');
 
 expectException(() => {
     var nullVar = null;
@@ -233,11 +233,11 @@ expectException(() => {
 
 expectException(() => {
     Integrity.checkStringNotNullOrEmpty(null);
-}, Integrity.BlankStringException, 'Null string');
+}, Integrity.BlankStringException, 'Expected string, but was null');
 
 expectException(() => {
     Integrity.checkStringNotNullOrEmpty(undefined);
-}, Integrity.BlankStringException, 'Undefined string');
+}, Integrity.BlankStringException, 'Expected string, but was undefined');
 
 expectException(() => {
     Integrity.checkStringNotNullOrEmpty(NaN);
@@ -271,7 +271,7 @@ expectException(() => {
 
 expectException(() => {
     Integrity.checkIsValidNumber(undefined);
-}, Integrity.IllegalTypeException, "Expected number, but was undefined");
+}, Integrity.NullPointerException, "Expected number, but was undefined");
 
 expectException(() => {
     Integrity.checkIsValidNumber(Infinity);
@@ -283,7 +283,7 @@ expectException(() => {
 
 expectException(() => {
     Integrity.checkIsValidNumber(null);
-}, Integrity.IllegalTypeException, "Expected number, but was null");
+}, Integrity.NullPointerException, "Expected number, but was null");
 
 expectException(() => {
     Integrity.checkIsValidNumber(1 == 1);
