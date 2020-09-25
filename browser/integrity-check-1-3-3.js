@@ -144,9 +144,8 @@ class Integrity {
 	*/
 	static checkIsValidNumber(test, ...msg) {
 
-		if ((typeof test !== 'number') ||
-			(test !== test) || // test for NaN, which is never equal to itself
-			(test === Infinity)) {
+		if ((typeof test !== 'number') || !isFinite(test)) { // isFinite tests for NaN, +Inifinity, -Infinity
+
 			let text = '';
 			if (msg.length == 0) {
 				text = Integrity_IllegalTypeException.defaultMessage("number", test);

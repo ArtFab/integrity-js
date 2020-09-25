@@ -6,3 +6,9 @@
 /.vs/slnx.sqlite
 /package-lock.json
 /.vs/VSWorkspaceState.json
+/.vs/integrity-check/v16/TestStore/0
+/bin
+/obj/Debug
+/integrity-check.njsproj
+/integrity-check.njsproj.user
+/integrity-check.sln
