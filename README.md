@@ -9,11 +9,10 @@ cd into the root directory of yuor project, where the json.package file is, and 
 > npm install integrity-check --save
 ```
 import it into your code
-```
+
+```JavaScript
 const Integrity = require('integrity-check')
 
-// now you can use it...
-```JavaScript
 function myFunc(a) {
     Integrity.checkIsValidNumber(a, "a is not a number, it was {}", a)
 }
