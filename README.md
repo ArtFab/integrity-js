@@ -82,6 +82,7 @@ The following exceptions are thrown:
 
 ## Examples
 
+```JavaScript
 // const Integrity = require('integrity-check'); // needed for node scripts, not browser side ones
 
 function extractByAgeRange(students, ageMin, ageMax) {
@@ -104,3 +105,4 @@ function extractByAgeRange(students, ageMin, ageMax) {
 
     return retArray;
 }
+```
