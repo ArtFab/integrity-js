@@ -104,7 +104,7 @@ class Integrity {
     static checkIsValidNumber(test, ...msg) {
 
         if ((typeof test !== 'number') || !isFinite(test)) { // isFinite tests for NaN, +Inifinity, -Infinity
-            
+
             let text = '';
             if (msg.length == 0) {
                 text = Integrity._defaultMessage("number", test);
@@ -321,4 +321,3 @@ class Integrity {
     }
 }
 
-module.exports = Integrity;

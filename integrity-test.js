@@ -23,6 +23,7 @@ function expectException(f, exceptionType, exceptionMessage) {
 
             if (!(e instanceof exceptionType)) {
                 console.log("function is: " + f);
+                console.log(e)
                 fail('Expected exception ' + new exceptionType().constructor.name + ' but got ' + e.constructor.name + ' instead');
             }
         } 
@@ -68,6 +69,9 @@ try {
     Integrity.checkIsValidNumber(-0);
     Integrity.checkIsValidNumberOrNull(null);
     Integrity.checkIsValidNumberOrNull(undefinedVar);
+    Integrity.checkIsFunction(expectException);
+    Integrity.checkIsFunctionOrNull(expectException);
+    Integrity.checkIsFunctionOrNull(null);
 
 } catch (x) {
     console.log(x);
@@ -84,142 +88,157 @@ try {
 expectException(() => {
     let a1 = 1;
     Integrity.check(a1 = one);
-}, Integrity.IllegalTypeException, "Expected boolean, but was number, value was '1'");
+}, TypeError, "Expected boolean, but was number, value was '1'");
 
 expectException(() => {
     let a1 = 1;
     let a2 = 2;
     Integrity.check(a1 = a2); // simulate an error where the developer meant == but did = by accident 
-}, Integrity.IllegalTypeException, "Expected boolean, but was number, value was '2'");
+}, Integrity.TypeError, "Expected boolean, but was number, value was '2'");
 
 expectException(() => {
     let a1 = 1;
     Integrity.check(a1 = null);
-}, Integrity.NullPointerException, "Expected boolean, but was null");
+}, Integrity.TypeError, "Expected boolean, but was null");
 
 expectException(() => {
     Integrity.check(one == 2, 'expected 2 but got {}', one);
-}, Integrity.IntegrityException, 'expected 2 but got 1');
+}, Error, 'expected 2 but got 1');
 
 expectException(() => {
     const zero = 0;
     Integrity.check(zero == 2, 'expected 2 but got {}', zero);
-}, Integrity.IntegrityException, 'expected 2 but got 0');
+}, Error, 'expected 2 but got 0');
+
+expectException(() => {
+    let a1 = 1;
+    Integrity.fail();
+}, Error, "Integrity test failed");
+
 
 /* Integrity.checkIsBool tests -------------------------------------------------- */
 
 expectException(() => {
+    Integrity.checkIsBool(null);
+}, TypeError, "Expected boolean, but was null");
+
+expectException(() => {
+    let a1;
+    Integrity.checkIsBool(a1);
+}, ReferenceError, "Expected boolean, but was undefined");
+
+expectException(() => {
     Integrity.checkIsBool(1); // expect to throw as 1 is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was number, value was '1'");
+}, TypeError, "Expected boolean, but was number, value was '1'");
 
 expectException(() => {
     Integrity.checkIsBool(1, "check message works"); // check the provided message propogates through
-}, Integrity.IllegalTypeException, "check message works");
+}, TypeError, "check message works");
 
 expectException(() => {
     Integrity.checkIsBool(1, "check message works {} {}", 1, 2); // check the provided message propogates through
-}, Integrity.IllegalTypeException, "check message works 1 2");
+}, TypeError, "check message works 1 2");
 
 expectException(() => {
     Integrity.checkIsBool(''); // expect to throw as string is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was string, value was ''");
+}, TypeError, "Expected boolean, but was string, value was ''");
 
 expectException(() => {
     Integrity.checkIsBool(NaN); // expect to throw as NaN is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was NaN");
+}, TypeError, "Expected boolean, but was NaN");
 
 expectException(() => {
     Integrity.checkIsBool(Infinity); // expect to throw as Infinity is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was Infinity");
+}, TypeError, "Expected boolean, but was Infinity");
 
 expectException(() => {
     Integrity.checkIsBool([true]); // expect to throw as array is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was Array, value was 'true'");
+}, TypeError, "Expected boolean, but was Array, value was 'true'");
 
 expectException(() => {
     Integrity.checkIsBool([true, false]); // expect to throw as array is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was Array, value was 'true,false'");
+}, TypeError, "Expected boolean, but was Array, value was 'true,false'");
 
 expectException(() => {
     Integrity.checkIsBool({}); // expect to throw as object is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was object, value was '{}'");
+}, TypeError, "Expected boolean, but was object, value was '{}'");
 
 expectException(() => {
     Integrity.checkIsBool({a1: true}); // expect to throw as object is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was object, value was '{\"a1\":true}'");
+}, TypeError, "Expected boolean, but was object, value was '{\"a1\":true}'");
 
 /* Integrity.checkIsBoolOrNull tests -------------------------------------------------- */
 
 expectException(() => {
     Integrity.checkIsBoolOrNull(1); // expect to throw as 1 is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was number, value was '1'");
+}, TypeError, "Expected boolean, but was number, value was '1'");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull(1, "check message works"); // check the provided message propogates through
-}, Integrity.IllegalTypeException, "check message works");
+}, TypeError, "check message works");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull(1, "check message works {} {}", 1, 2); // check the provided message propogates through
-}, Integrity.IllegalTypeException, "check message works 1 2");
+}, TypeError, "check message works 1 2");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull(''); // expect to throw as string is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was string, value was ''");
+}, TypeError, "Expected boolean, but was string, value was ''");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull(NaN); // expect to throw as NaN is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was NaN");
+}, TypeError, "Expected boolean, but was NaN");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull(Infinity); // expect to throw as Infinity is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was Infinity");
+}, TypeError, "Expected boolean, but was Infinity");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull([true]); // expect to throw as array is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was Array, value was 'true'");
+}, TypeError, "Expected boolean, but was Array, value was 'true'");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull([true, false]); // expect to throw as array is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was Array, value was 'true,false'");
+}, TypeError, "Expected boolean, but was Array, value was 'true,false'");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull({}); // expect to throw as object is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was object, value was '{}'");
+}, TypeError, "Expected boolean, but was object, value was '{}'");
 
 expectException(() => {
     Integrity.checkIsBoolOrNull({ a1: true }); // expect to throw as object is not a boolean
-}, Integrity.IllegalTypeException, "Expected boolean, but was object, value was '{\"a1\":true}'");
+}, TypeError, "Expected boolean, but was object, value was '{\"a1\":true}'");
 
 /* Integrity.checkNotNull tests -------------------------------------------------- */
 
 expectException(() => {
     var undefinedVariable;
     Integrity.checkNotNull(undefinedVariable, 'undefinedVariable is null');
-}, Integrity.NullPointerException, 'undefinedVariable is null');
+}, ReferenceError, 'undefinedVariable is null');
 
 expectException(() => {
     var undefinedVariable;
     Integrity.checkNotNull(undefinedVariable);
-}, Integrity.NullPointerException, 'Integrity test failed: Undefined encountered');
+}, ReferenceError, 'Integrity test failed: Undefined encountered');
 
 expectException(() => {
     var undefinedVariable;
     Integrity.checkNotNull(undefinedVariable, "m1 {} {}", 1, undefinedVariable);
-}, Integrity.NullPointerException, 'm1 1 undefined');
+}, ReferenceError, 'm1 1 undefined');
 
 expectException(() => {
     var nullVar = null;
     Integrity.checkNotNull(nullVar);
-}, Integrity.NullPointerException, 'Integrity test failed: Null encountered');
+}, TypeError, 'Integrity test failed: Null encountered');
 
 expectException(() => {
     var nullVar = null;
     Integrity.checkNotNull(nullVar, "{}", nullVar);
-}, Integrity.NullPointerException, 'null');
+}, TypeError, 'null');
 
 expectException(() => {
     Integrity.checkNotNull(null);
-}, Integrity.NullPointerException);
+}, TypeError, 'Integrity test failed: Null encountered');
 
 /* Integrity.checkNotNullOrBlank tests -------------------------------------------------- */
 
@@ -253,59 +272,82 @@ expectException(() => {
 
 expectException(() => {
     Integrity.checkStringNotNullOrEmpty(0); // expect to throw as 0 is not a string
-}, Integrity.IllegalTypeException);
+}, TypeError);
 
 expectException(() => {
     Integrity.checkStringNotNullOrEmpty(1); // expect to throw as 1 is not a string
-}, Integrity.IllegalTypeException);
+}, TypeError);
 
 expectException(() => {
     Integrity.checkStringNotNullOrEmpty(1, "a {}", 1); // expect to throw as 1 is not a string
-}, Integrity.IllegalTypeException, 'a 1');
+}, TypeError, 'a 1');
 
 /* Integrity.checkIsValidNumber tests -------------------------------------------------- */
 
 expectException(() => {
     Integrity.checkIsValidNumber(NaN);
-}, Integrity.IllegalTypeException, "Expected number, but was NaN");
+}, TypeError, "Expected number, but was NaN");
 
 expectException(() => {
     Integrity.checkIsValidNumber(undefined);
-}, Integrity.NullPointerException, "Expected number, but was undefined");
+}, ReferenceError, "Expected number, but was undefined");
 
 expectException(() => {
     Integrity.checkIsValidNumber(Infinity);
-}, Integrity.IllegalTypeException, "Expected number, but was Infinity");
+}, TypeError, "Expected number, but was Infinity");
 
 expectException(() => {
     Integrity.checkIsValidNumber("1");
-}, Integrity.IllegalTypeException, "Expected number, but was string, value was '1'");
+}, TypeError, "Expected number, but was string, value was '1'");
 
 expectException(() => {
     Integrity.checkIsValidNumber(null);
-}, Integrity.NullPointerException, "Expected number, but was null");
+}, TypeError, "Expected number, but was null");
 
 expectException(() => {
     Integrity.checkIsValidNumber(1 == 1);
-}, Integrity.IllegalTypeException, "Expected number, but was boolean, value was 'true'");
+}, TypeError, "Expected number, but was boolean, value was 'true'");
 
 /* Integrity.checkIsValidNumberOrNull tests -------------------------------------------------- */
 
 expectException(() => {
     Integrity.checkIsValidNumberOrNull(NaN);
-}, Integrity.IllegalTypeException, "Expected number, but was NaN");
+}, TypeError, "Expected number, but was NaN");
 
 expectException(() => {
     Integrity.checkIsValidNumberOrNull(Infinity);
-}, Integrity.IllegalTypeException, "Expected number, but was Infinity");
+}, TypeError, "Expected number, but was Infinity");
 
 expectException(() => {
     Integrity.checkIsValidNumberOrNull("1");
-}, Integrity.IllegalTypeException, "Expected number, but was string, value was '1'");
+}, TypeError, "Expected number, but was string, value was '1'");
 
 expectException(() => {
     Integrity.checkIsValidNumberOrNull(1 == 1);
-}, Integrity.IllegalTypeException, "Expected number, but was boolean, value was 'true'");
+}, TypeError, "Expected number, but was boolean, value was 'true'");
 
+/* Integrity.checkIsFunction tests -------------------------------------------------- */
+
+expectException(() => {
+    Integrity.checkIsFunction(undefined);
+}, ReferenceError, "Expected function, but was undefined");
+
+expectException(() => {
+    Integrity.checkIsFunction(null);
+}, TypeError, "Expected function, but was null");
+
+expectException(() => {
+    Integrity.checkIsFunction(1 == 1);
+}, TypeError, "Expected function, but was boolean, value was 'true'");
+
+/* Integrity.checkIsFunctionOrNull tests -------------------------------------------------- */
+
+expectException(() => {
+    Integrity.checkIsFunctionOrNull(1 == 1);
+}, TypeError, "Expected function, but was boolean, value was 'true'");
+
+expectException(() => {
+    Integrity.checkIsFunctionOrNull("abc");
+}, TypeError, "Expected function, but was string, value was 'abc'");
 
 console.log('All tests passed');
