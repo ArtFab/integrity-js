@@ -58,20 +58,20 @@ function myFunc(a) {
 
 The full set of functions is:
 
-```
-    check(condition, *msg)
-    checkNotNull(test, *msg)
-    checkIsBool(test, *msg)
-    checkIsBoolOrNull(test, *msg)
-    checkIsString(test, *msg)
-    checkIsStringOrNull(test, *msg)
-    checkStringNotNullOrEmpty(test, *msg)
-    checkIsValidNumber(test, *msg)
-    checkIsValidNumberOrNull(test, *msg)
-    checkIsFunction(test, *msg)
-    checkIsFunctionOrNull(test, *msg)
+```JavaScript
+    Integrity.check(condition, *msg)
+    Integrity.checkNotNull(test, *msg)
+    Integrity.checkIsBool(test, *msg)
+    Integrity.checkIsBoolOrNull(test, *msg)
+    Integrity.checkIsString(test, *msg)
+    Integrity.checkIsStringOrNull(test, *msg)
+    Integrity.checkStringNotNullOrEmpty(test, *msg)
+    Integrity.checkIsValidNumber(test, *msg)
+    Integrity.checkIsValidNumberOrNull(test, *msg)
+    Integrity.checkIsFunction(test, *msg)
+    Integrity.checkIsFunctionOrNull(test, *msg)
 
-    fail(*msg)
+    Integrity.fail(*msg)
 ```
 ### Exceptions
 
