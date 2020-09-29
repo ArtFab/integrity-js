@@ -13,6 +13,7 @@ import it into your code
 const Integrity = require('integrity-check')
 
 // now you can use it...
+```JavaScript
 function myFunc(a) {
     Integrity.checkIsValidNumber(a, "a is not a number, it was {}", a)
 }
@@ -38,7 +39,7 @@ yourfolder\node_modules\integrity-check\browser\integrity-check-X-X-X.js
 Copy this file to the area on your server where you serve up scripts.
 In your html file, at the following into the head section:
 
-```
+```html
 <html>
     <head>
         <!-- other stuff-->
@@ -49,10 +50,11 @@ In your html file, at the following into the head section:
 ```
 
 Then inside one of your JavaScript scripts you can do (for example):
-
+```JavaScript
 function myFunc(a) {
     Integrity.checkIsValidNumber(a, "a is not a number, it was {}", a)
 }
+```
 
 ## Integrity API
 
