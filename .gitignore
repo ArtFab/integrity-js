@@ -12,3 +12,6 @@
 /integrity-check.njsproj
 /integrity-check.njsproj.user
 /integrity-check.sln
+/dist
+/node_modules/.bin
+/node_modules

@@ -2,6 +2,8 @@
 
 class Integrity {
 
+    static stringTruncationLimit: number = 30;
+
     /**
     * Check an assumption
     * @param {boolean} condition The condition which should be true
@@ -9,7 +11,7 @@ class Integrity {
     * @throws {IllegalTypeException} if condition is not a boolean
     * @throws {IntegrityException} if condition is false
     */
-    static check(condition, ...msg) {
+    static check(condition: boolean, ...msg: any[]): void {
 
         Integrity.checkIsBool(condition);
 
@@ -22,7 +24,7 @@ class Integrity {
     * Raise an IntegrityException exception
     * @param {...any} msg zero or more arguments, see comment for getDeferredString
     */
-    static fail(...msg) {
+    static fail(...msg: any[]): void {
         Integrity._raiseError(new Error(Integrity._msg("Integrity test failed", msg)), Integrity.check);
     }
 
@@ -41,10 +43,10 @@ class Integrity {
      * if test is a string with value 'a': "Expected boolean, but was string, value was 'a'"
      * ... and other types will have similar messages
      */
-    static checkIsBool(test, ...msg) {
+    static checkIsBool(test: boolean, ...msg: any[]): void {
 
         if (typeof test !== "boolean") {
-            let text = '';
+            let text: string = '';
             if (msg.length == 0) {
                 text = Integrity._defaultMessage("boolean", test);
             } else {
@@ -70,7 +72,7 @@ class Integrity {
     *
     * See comment for checkIsBool for information on default message
     */
-    static checkIsBoolOrNull(test, ...msg) {
+    static checkIsBoolOrNull(test: boolean, ...msg: any[]): void {
 
         if (test === null || test === undefined) {
             return;
@@ -86,7 +88,7 @@ class Integrity {
     * @throws {TypeError} if test is null
     * @throws {ReferenceError} if test is undefined
     */
-    static checkNotNull(test, ...msg) {
+    static checkNotNull(test: any, ...msg: any[]): void {
         if (test === undefined) {
             Integrity._raiseError(new ReferenceError(Integrity._msg('Integrity test failed: Undefined encountered', msg)), this.checkNotNull);
         } else if (test === null) {
@@ -101,11 +103,11 @@ class Integrity {
      * @throws {ReferenceError} if test is undefined
      * @throws {TypeError} if test is null, or not a number (int, float), or is NaN or +/-Infinity. Note that "1" is not of type number (it is a string)
      */
-    static checkIsValidNumber(test, ...msg) {
+    static checkIsValidNumber(test: number, ...msg: any[]): void {
 
         if ((typeof test !== 'number') || !isFinite(test)) { // isFinite tests for NaN, +Inifinity, -Infinity
-            
-            let text = '';
+
+            let text: string = '';
             if (msg.length == 0) {
                 text = Integrity._defaultMessage("number", test);
             } else {
@@ -126,7 +128,7 @@ class Integrity {
     * @param {...any} msg zero or more arguments, see comment for getDeferredString
     * @throws {TypeError} if test is not a number (int, float), or is NaN or +/-Infinity. Note that "1" is not of type number
     */
-    static checkIsValidNumberOrNull(test, ...msg) {
+    static checkIsValidNumberOrNull(test: number, ...msg: any[]): void {
 
         if (test === null || test === undefined) {
             return;
@@ -142,11 +144,11 @@ class Integrity {
     * @throws {ReferenceError} if s is undefined
     * @throws {TypeError} if s is null or not of type string
     */
-    static checkIsString(s, ...msg) {
+    static checkIsString(s: string, ...msg: any[]): void {
         if (typeof s === 'string') {
             return;
         }
-        let text = '';
+        let text: string = '';
         if (msg.length == 0) {
             text = Integrity._defaultMessage("string", s);
         } else {
@@ -161,12 +163,12 @@ class Integrity {
     }
 
     /**
-	* Check that something is of type string, or null or undefined
+    * Check that something is of type string, or null or undefined
     * @param {any} s item to check
     * @param {...any} msg zero or more arguments, see comment for getDeferredString
     * @throws {TypeError} if s is not of type string
     */
-    static checkIsStringOrNull(s, ...msg) {
+    static checkIsStringOrNull(s: string, ...msg: any[]): void {
         if (s === undefined || s === null) {
             return;
         }
@@ -175,14 +177,14 @@ class Integrity {
     }
 
     /**
-	* Check that something is of type string, neither null nor undefined, and not empty
+    * Check that something is of type string, neither null nor undefined, and not empty
     * @param {any} s item to check
     * @param {...any} msg zero or more arguments, see comment for getDeferredString
     * @throws {ReferenceError} if s is undefined
     * @throws {TypeError} if s is null or not of type string
     * @throws {Error} if s is a string of length 0
     */
-    static checkStringNotNullOrEmpty(s, ...msg) {
+    static checkStringNotNullOrEmpty(s: string, ...msg: any[]): void {
 
         Integrity.checkIsString(s, ...msg);
 
@@ -197,11 +199,11 @@ class Integrity {
     * @throws {ReferenceError} if test is undefined
     * @throws {TypeError} if test is null or not of type function
     */
-    static checkIsFunction(test, ...msg) {
+    static checkIsFunction(test: Function, ...msg: any[]): void {
         if (typeof test === 'function') {
             return;
         }
-        let text = '';
+        let text: string = '';
         if (msg.length == 0) {
             text = Integrity._defaultMessage("function", test);
         } else {
@@ -221,7 +223,7 @@ class Integrity {
     * @param {...any} msg zero or more arguments, see comment for getDeferredString
     * @throws {TypeError} if test is not of type function (null and undefined are ok)
     */
-    static checkIsFunctionOrNull(test, ...msg) {
+    static checkIsFunctionOrNull(test: Function, ...msg: any[]): void {
         if (test === undefined || test === null) {
             return;
         }
@@ -241,10 +243,11 @@ class Integrity {
      * getDeferredString(123, "and now {} ", 345) returns "123, and now 345"
      * getDeferredString("{} {} {}", 1, 2, 3, 4)  returns "1 2 3, 4"
      */
-    static getDeferredString(...messageArray) {
-        return _msg("", messageArray)
+    static getDeferredString(...messageArray: any[]) {
+        return Integrity._msg("", messageArray)
     }
-    static _prettyType(thing) {
+
+    static _prettyType(thing: any): string {
         if (thing === null) {
             return "null";
         } else if (thing !== thing) {
@@ -260,14 +263,14 @@ class Integrity {
         }
     }
 
-    static _raiseError(x, clipFunction) {
+    static _raiseError(x: Error, clipFunction: Function): void {
         if (Error.captureStackTrace) {
             Error.captureStackTrace(x, clipFunction);
         }
         throw x;
     }
 
-    static _msg(defaultMessage, messageArray) {
+    static _msg(defaultMessage: string, messageArray: any[]): string {
         if (!messageArray || messageArray.length == 0) {
             return defaultMessage;
         } else {
@@ -275,20 +278,20 @@ class Integrity {
         }
     }
 
-    static _expandMessageArray() {
+    static _expandMessageArray(...ma: any[]): string {
         if (arguments.length == 0) {
             return 'Integrity test failed';
         }
 
         try {
             //console.log(msg);
-            var s = '' + arguments[0];
+            var s: string = Integrity._stringValue(arguments[0]);
             if (arguments.length > 1) {
                 for (var i = 1; i < arguments.length; i++) {
                     if (s.indexOf('{}') == -1) {
-                        s += ", '" + arguments[i] + "'";
+                        s += ", '" + Integrity._stringValue(arguments[i]) + "'";
                     } else {
-                        s = s.replace('{}', '' + arguments[i]);
+                        s = s.replace('{}', '' + Integrity._stringValue(arguments[i]));
                     }
                 }
             }
@@ -299,19 +302,24 @@ class Integrity {
         return s;
     }
 
-    static _defaultMessage(expectedType, actualThing) {
-
-        let valueOfThing = '' + actualThing;
-        if (!Array.isArray(actualThing) && valueOfThing == '[object Object]') {
+    static _stringValue(actualThing: any): string {
+        let valueOfThing: string = '' + actualThing;
+        if (Array.isArray(actualThing) || valueOfThing == '[object Object]') {
             valueOfThing = JSON.stringify(actualThing);
         }
-        if (valueOfThing.length > 30) {
-            valueOfThing = valueOfThing.substring(0, 30);
+        if (valueOfThing.length > Integrity.stringTruncationLimit) {
+            valueOfThing = valueOfThing.substring(0, Integrity.stringTruncationLimit) + "...";
         }
+        return valueOfThing;
+    }
 
-        let defaultMessage = "Expected " + expectedType + ", but was " + Integrity._prettyType(actualThing);
+    static _defaultMessage(expectedType: string, actualThing: any): string {
 
-        let prettyType = Integrity._prettyType(actualThing);
+        let valueOfThing: string = Integrity._stringValue(actualThing);
+
+        let defaultMessage: string = "Expected " + expectedType + ", but was " + Integrity._prettyType(actualThing);
+
+        let prettyType: string = Integrity._prettyType(actualThing);
 
         if (prettyType.toUpperCase() != valueOfThing.toUpperCase()) {
             defaultMessage += ", value was '" + valueOfThing + "'";
@@ -320,5 +328,3 @@ class Integrity {
         return defaultMessage;
     }
 }
-
-module.exports = Integrity;

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES3",
+    "module": "none",
+    "outDir": "./dist/browser"
+  },
+  "include": [ "src/plain" ]
+}

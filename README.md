@@ -1,5 +1,11 @@
 # Integrity check
 
+This library can be used in:
+* Node (plain javascript)
+* Node (typescript)
+* Browser (plain javascript)
+* Browser (typescript)
+
 ## Use with Node
 
 Use npm to install it:
