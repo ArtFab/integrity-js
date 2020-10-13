@@ -30,7 +30,7 @@ function myFunc(a) {
 
 You can use npm to fetch the integrity-check module and extract the script from there. Otherwise you can go to github and get the file:
 
-https://github.com/ArtFab/integrity-js/tree/master/browser
+https://github.com/RisingTyde/integrity-js/tree/master/dist/browser/integrity-check-1-3-6.js
 (the file will be called integrity-X-X-X.js)
 
 If you use npm, create a folder and do

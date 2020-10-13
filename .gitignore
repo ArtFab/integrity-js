@@ -12,6 +12,9 @@
 /integrity-check.njsproj
 /integrity-check.njsproj.user
 /integrity-check.sln
-/dist
+/dist/cjs
+/dist/esm
+/dist/browser/*.ts
+/dist/browser/*.map
 /node_modules/.bin
 /node_modules
