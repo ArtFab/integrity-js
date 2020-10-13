@@ -17,7 +17,7 @@ cd into the root directory of yuor project, where the json.package file is, and 
 import it into your code
 
 ```JavaScript
-const Integrity = require('integrity-check')
+const { Integrity } = require('integrity-check')
 
 function myFunc(a) {
     Integrity.checkIsValidNumber(a, "a is not a number, it was {}", a)
