@@ -276,6 +276,11 @@ var Integrity = /** @class */ (function () {
         }
         return Integrity._msg("", messageArray);
     };
+    /**
+     * Get the type of a thing and return a more meaningful representation than what you get from typeof
+     *
+     * @param thing
+     */
     Integrity._prettyType = function (thing) {
         if (thing === null) {
             return "null";
@@ -286,8 +291,11 @@ var Integrity = /** @class */ (function () {
         else if (thing === undefined) {
             return "undefined";
         }
-        else if (thing == Infinity) {
-            return "Infinity";
+        else if (thing == Number.POSITIVE_INFINITY) {
+            return "+Infinity";
+        }
+        else if (thing == Number.NEGATIVE_INFINITY) {
+            return "-Infinity";
         }
         else if (Array.isArray(thing)) {
             return "Array";
@@ -302,6 +310,12 @@ var Integrity = /** @class */ (function () {
         }
         throw x;
     };
+    /**
+     * Either convert an array of items to a message, or return a default message if the array is empty
+     *
+     * @param defaultMessage the message to use as the default if the array is empty
+     * @param messageArray array of items which will be converted to a message
+     */
     Integrity._msg = function (defaultMessage, messageArray) {
         if (!messageArray || messageArray.length == 0) {
             return defaultMessage;
@@ -310,6 +324,11 @@ var Integrity = /** @class */ (function () {
             return Integrity._expandMessageArray.apply(Integrity, messageArray);
         }
     };
+    /**
+     * Convert the (array) of parameters to a string, by concatenating them together unless an {} exists in the built up string, in which case substite.
+     *
+     * @param ma
+     */
     Integrity._expandMessageArray = function () {
         var ma = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -319,44 +338,78 @@ var Integrity = /** @class */ (function () {
             return 'Integrity test failed';
         }
         try {
-            //console.log(msg);
             var s = Integrity._stringValue(arguments[0]);
             if (arguments.length > 1) {
                 for (var i = 1; i < arguments.length; i++) {
                     if (s.indexOf('{}') == -1) {
-                        s += ", '" + Integrity._stringValue(arguments[i]) + "'";
+                        s += ", " + Integrity._stringValue(arguments[i], true);
                     }
                     else {
                         s = s.replace('{}', '' + Integrity._stringValue(arguments[i]));
                     }
                 }
             }
+            return s;
         }
         catch (x) {
             return arguments[0] + ' << exception while replacing parameters >>';
         }
-        return s;
     };
-    Integrity._stringValue = function (actualThing) {
-        var valueOfThing = '' + actualThing;
-        if (Array.isArray(actualThing) || valueOfThing == '[object Object]') {
+    /**
+     * Attempt to convert the item into a meaningful string represenation.
+     * @param actualThing
+     * @param ifStringAddQuotes if true, then if the item passed in is a string, single quotes wil be added to it. e.g. abc becomes 'abc'
+     */
+    Integrity._stringValue = function (actualThing, ifStringAddQuotes) {
+        if (ifStringAddQuotes === void 0) { ifStringAddQuotes = false; }
+        var valueOfThing = '';
+        if (actualThing == Number.POSITIVE_INFINITY) {
+            valueOfThing = "+Infinity";
+        }
+        else if (actualThing == Number.NEGATIVE_INFINITY) {
+            valueOfThing = "-Infinity";
+        }
+        else if (Array.isArray(actualThing)) {
             valueOfThing = JSON.stringify(actualThing);
         }
-        if (valueOfThing.length > Integrity.stringTruncationLimit) {
-            valueOfThing = valueOfThing.substring(0, Integrity.stringTruncationLimit) + "...";
+        else {
+            valueOfThing = '' + actualThing;
         }
-        return valueOfThing;
+        if (valueOfThing == '[object Object]') {
+            valueOfThing = JSON.stringify(actualThing);
+        }
+        var addQuotes = (ifStringAddQuotes && typeof actualThing == 'string');
+        if (valueOfThing.length > Integrity.stringTruncationLimit) {
+            valueOfThing = valueOfThing.substring(0, Integrity.stringTruncationLimit);
+            if (addQuotes) {
+                valueOfThing = "'" + valueOfThing + "'";
+            }
+            valueOfThing += "...";
+            return valueOfThing;
+        }
+        if (addQuotes) {
+            return "'" + valueOfThing + "'";
+        }
+        else {
+            return valueOfThing;
+        }
     };
     Integrity._defaultMessage = function (expectedType, actualThing) {
-        var valueOfThing = Integrity._stringValue(actualThing);
-        var defaultMessage = "Expected " + expectedType + ", but was " + Integrity._prettyType(actualThing);
+        var valueAsString = Integrity._stringValue(actualThing, true);
         var prettyType = Integrity._prettyType(actualThing);
-        if (prettyType.toUpperCase() != valueOfThing.toUpperCase()) {
-            defaultMessage += ", value was '" + valueOfThing + "'";
+        var defaultMessage = "Expected " + expectedType + ", but was " + prettyType;
+        // note edge case like "..., but was None, value was None" nicer to just have "..., but was None"
+        // also note that prettyType is !== typeof, for example prettyType could be "+Infinity" but typeof would show "number"
+        if (prettyType.toUpperCase() != valueAsString.toUpperCase()) {
+            defaultMessage += ", value was " + valueAsString;
         }
         return defaultMessage;
     };
+    /**
+     * The limit to which any value can be represented as a string. Note that the limit applies separately to each item, so the final message might be longer.
+     */
     Integrity.stringTruncationLimit = 30;
+    Integrity.VERSION = "1.3.7";
     return Integrity;
 }());
-//# sourceMappingURL=integrity-check-1-3-6.js.map
+//# sourceMappingURL=integrity-check.js.map

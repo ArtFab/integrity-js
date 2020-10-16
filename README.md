@@ -6,7 +6,7 @@ This library can be used in:
 * Browser (plain javascript)
 * Browser (typescript)
 
-## Use with Node
+## Use with Node (plain JavaScript)
 
 Use npm to install it:
 
@@ -23,10 +23,31 @@ function myFunc(a) {
     Integrity.checkIsValidNumber(a, "a is not a number, it was {}", a)
 }
 ```
+## Use with Node (TypeScript)
+Use npm to install it:
+
+cd into the root directory of yuor project, where the json.package file is, and do:
+```
+> npm install integrity-check --save
+```
+import it into your code
+
+```JavaScript
+import { Integrity } from "integrity-check"
+
+function myFunc(a) {
+    Integrity.checkIsValidNumber(a, "a is not a number, it was {}", a)
+}
+```
 
 ## Use in browser
 
 ### How to obtain the integrity-check-X-X-X.js file
+
+You have several options:
+* grab from git hub
+* use npm to install integrity-check then grab from dist/browser folder
+* use this link directly in your html or use it to grab the file: 
 
 You can use npm to fetch the integrity-check module and extract the script from there. Otherwise you can go to github and get the file:
 

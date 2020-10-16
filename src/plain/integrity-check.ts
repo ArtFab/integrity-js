@@ -2,7 +2,12 @@
 
 class Integrity {
 
+    /**
+     * The limit to which any value can be represented as a string. Note that the limit applies separately to each item, so the final message might be longer.
+     */
     static stringTruncationLimit: number = 30;
+
+    static VERSION = "1.3.7"
 
     /**
     * Check an assumption
@@ -247,6 +252,11 @@ class Integrity {
         return Integrity._msg("", messageArray)
     }
 
+    /**
+     * Get the type of a thing and return a more meaningful representation than what you get from typeof
+     * 
+     * @param thing
+     */
     static _prettyType(thing: any): string {
         if (thing === null) {
             return "null";
@@ -254,8 +264,10 @@ class Integrity {
             return "NaN";
         } else if (thing === undefined) {
             return "undefined";
-        } else if (thing == Infinity) {
-            return "Infinity";
+        } else if (thing == Number.POSITIVE_INFINITY) {
+            return "+Infinity";
+        } else if (thing == Number.NEGATIVE_INFINITY) {
+            return "-Infinity";
         } else if (Array.isArray(thing)) {
             return "Array";
         } else {
@@ -270,6 +282,12 @@ class Integrity {
         throw x;
     }
 
+    /**
+     * Either convert an array of items to a message, or return a default message if the array is empty
+     * 
+     * @param defaultMessage the message to use as the default if the array is empty
+     * @param messageArray array of items which will be converted to a message
+     */
     static _msg(defaultMessage: string, messageArray: any[]): string {
         if (!messageArray || messageArray.length == 0) {
             return defaultMessage;
@@ -278,51 +296,87 @@ class Integrity {
         }
     }
 
+    /**
+     * Convert the (array) of parameters to a string, by concatenating them together unless an {} exists in the built up string, in which case substite.
+     * 
+     * @param ma
+     */
     static _expandMessageArray(...ma: any[]): string {
         if (arguments.length == 0) {
             return 'Integrity test failed';
         }
 
         try {
-            //console.log(msg);
-            var s: string = Integrity._stringValue(arguments[0]);
+            let s: string = Integrity._stringValue(arguments[0]);
+
             if (arguments.length > 1) {
-                for (var i = 1; i < arguments.length; i++) {
+                for (let i = 1; i < arguments.length; i++) {
                     if (s.indexOf('{}') == -1) {
-                        s += ", '" + Integrity._stringValue(arguments[i]) + "'";
+                        s += ", " + Integrity._stringValue(arguments[i], true);
                     } else {
                         s = s.replace('{}', '' + Integrity._stringValue(arguments[i]));
                     }
                 }
             }
+
+            return s;
+
         } catch (x) {
             return arguments[0] + ' << exception while replacing parameters >>';
         }
-
-        return s;
     }
 
-    static _stringValue(actualThing: any): string {
-        let valueOfThing: string = '' + actualThing;
-        if (Array.isArray(actualThing) || valueOfThing == '[object Object]') {
+    /**
+     * Attempt to convert the item into a meaningful string represenation. 
+     * @param actualThing
+     * @param ifStringAddQuotes if true, then if the item passed in is a string, single quotes wil be added to it. e.g. abc becomes 'abc'
+     */
+    static _stringValue(actualThing: any, ifStringAddQuotes: boolean = false): string {
+        let valueOfThing: string = ''
+
+        if (actualThing == Number.POSITIVE_INFINITY) {
+            valueOfThing = "+Infinity";
+        } else if (actualThing == Number.NEGATIVE_INFINITY) {
+            valueOfThing = "-Infinity";
+        } else if (Array.isArray(actualThing)) {
+            valueOfThing = JSON.stringify(actualThing);
+        } else {
+            valueOfThing = '' + actualThing;
+        }
+
+        if (valueOfThing == '[object Object]') {
             valueOfThing = JSON.stringify(actualThing);
         }
+        const addQuotes: boolean = (ifStringAddQuotes && typeof actualThing == 'string');
+
         if (valueOfThing.length > Integrity.stringTruncationLimit) {
-            valueOfThing = valueOfThing.substring(0, Integrity.stringTruncationLimit) + "...";
+            valueOfThing = valueOfThing.substring(0, Integrity.stringTruncationLimit);
+            if (addQuotes) {
+                valueOfThing = "'" + valueOfThing + "'";
+            }
+            valueOfThing += "...";
+            return valueOfThing;
         }
-        return valueOfThing;
+        if (addQuotes) {
+            return "'" + valueOfThing + "'";
+        } else {
+            return valueOfThing;
+        }
     }
 
     static _defaultMessage(expectedType: string, actualThing: any): string {
 
-        let valueOfThing: string = Integrity._stringValue(actualThing);
+        const valueAsString: string = Integrity._stringValue(actualThing, true);
 
-        let defaultMessage: string = "Expected " + expectedType + ", but was " + Integrity._prettyType(actualThing);
+        const prettyType: string = Integrity._prettyType(actualThing);
 
-        let prettyType: string = Integrity._prettyType(actualThing);
+        let defaultMessage: string = "Expected " + expectedType + ", but was " + prettyType;
 
-        if (prettyType.toUpperCase() != valueOfThing.toUpperCase()) {
-            defaultMessage += ", value was '" + valueOfThing + "'";
+        // note edge case like "..., but was None, value was None" nicer to just have "..., but was None"
+        // also note that prettyType is !== typeof, for example prettyType could be "+Infinity" but typeof would show "number"
+
+        if (prettyType.toUpperCase() != valueAsString.toUpperCase()) {
+            defaultMessage += ", value was " + valueAsString;
         }
 
         return defaultMessage;
