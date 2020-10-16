@@ -45,14 +45,11 @@ function myFunc(a) {
 ### How to obtain the integrity-check-X-X-X.js file
 
 You have several options:
-* grab from git hub
+* grab from git hub: https://github.com/RisingTyde/integrity-js/tree/master/dist/browser
 * use npm to install integrity-check then grab from dist/browser folder
-* use this link directly in your html or use it to grab the file: 
+* use this link directly in your html or use it to grab the file: https://risingtyde.github.io/scripts/integrity-check.js
 
-You can use npm to fetch the integrity-check module and extract the script from there. Otherwise you can go to github and get the file:
-
-https://github.com/RisingTyde/integrity-js/tree/master/dist/browser/integrity-check-1-3-6.js
-(the file will be called integrity-X-X-X.js)
+#### Using npm
 
 If you use npm, create a folder and do
 ```
@@ -62,7 +59,7 @@ The relevant file can be found in the installed package. Look in
 yourfolder\node_modules\integrity-check\browser\integrity-check-X-X-X.js
 
 ### How to use inside your browser side script
-Copy this file to the area on your server where you serve up scripts.
+Copy the file to the area on your server where you serve up scripts.
 In your html file, at the following into the head section:
 
 ```html
