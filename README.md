@@ -1,5 +1,19 @@
 # Integrity check
 
+This library provides a simple way of performing runtime checks, with the following features:
+
+* The building of the error messages is delayed until the check fails
+* You can pass any variables to make the error message out of
+* Truncation (configurable) is used to make sure the error message does not get stupidly long 
+* You can optionally do substitution with {} if you want to control how the message is built
+* You don't have to provide anything for the error message in which case a default is used
+* Default error messages will provide spot NaN, Infinity, null, undefined etc. and provide meaningful information
+* This is part of a similar set of libraries for other languages which are based on the same API
+
+General language independent informaiton about 'Integrity checking' can be found here: https://risingtyde.github.io/
+
+# Usage
+
 This library can be used in:
 * Node (plain javascript)
 * Node (typescript)
@@ -79,7 +93,7 @@ function myFunc(a) {
 }
 ```
 
-## Integrity API
+# Integrity API
 
 The full set of functions is:
 
@@ -98,7 +112,7 @@ The full set of functions is:
 
     Integrity.fail(*msg)
 ```
-### Exceptions
+## Exceptions
 
 The following exceptions are thrown:
 * TypeError - when the test is not the right type (which may include null if not allowed)
