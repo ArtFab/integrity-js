@@ -10,7 +10,9 @@ This library provides a simple way of performing runtime checks, with the follow
 * Default error messages will provide spot NaN, Infinity, null, undefined etc. and provide meaningful information
 * This is part of a similar set of libraries for other languages which are based on the same API
 
-General language independent informaiton about 'Integrity checking' can be found here: https://risingtyde.github.io/
+General language independent information about 'Integrity checking' can be found here: https://risingtyde.github.io/
+
+You can see examples of what exceptins are thrown and what messages are generated here: https://risingtyde.github.io/sample.html
 
 # Usage
 

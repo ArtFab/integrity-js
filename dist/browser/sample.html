@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <script src="integrity-check.min.js"></script>
+    <title>Integrity check examples</title>
+    <style>
+        .headerRow {
+            background-color: #0D0087;
+            color: white;
+        }
+        .rowA {
+            /*background-color: #EDFFF8;*/
+        }
+        .rowB {
+            /*background-color: #FFFAF4;*/
+        }
+        .comment {
+            background-color: #FFFFC9;
+            border-radius: 5px;
+            border: 1px dotted black;
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Integrity checking in the browser example</h1>
+    <p>
+    This page contains examples of using the Integrity API.
+    </p>
+    <table id="outT" class="outT" border=0></table>
+    <script>
+
+        var rowCount = 0;
+        function addCommentRow(s) {
+            let table = document.getElementById("outT")
+
+            let row = table.insertRow(-1);
+            let cell1 = row.insertCell(-1)
+            cell1.innerHTML = "<span class='comment'>" + s + "</span>";
+            rowCount++;
+        }
+
+        function addRow(a, b, c) {
+            if (a.trim() == '') {
+                a = '&nbsp;'
+            }
+            let table = document.getElementById("outT")
+
+            let row = table.insertRow(-1)
+            let cell1 = row.insertCell(-1)
+            let cell2 = row.insertCell(-1)
+            let cell3 = row.insertCell(-1)
+            cell1.innerHTML = a
+            cell2.innerHTML = b
+            cell3.innerHTML = c
+
+            if (rowCount == 0) {
+                row.classList.add("headerRow")
+            } else {
+                row.classList.add((rowCount % 2 == 0) ? "rowA" : "rowB")
+            }
+            rowCount++
+        }
+
+        let one = 1;
+        let two = 2;
+        let anObj = { f1: one, f2: two }
+        let anArr = [one, two]
+        let notTrue = false
+        let aString = 'abc'
+
+        let snippets = [
+            () => { return "Set up some variables to use..." },
+            () => { let one = 1;
+                let two = 2;
+                let anObj = {f1: one, f2: two}
+                let anArr = [one, two]
+                let notTrue = false
+                let aString = 'abc'},
+            () => { Integrity.check(false) },
+            () => { return "If you accidentally do = instead of == a TypeError is raised" },
+            () => { Integrity.check(one = one) },
+            () => { return "... in which case you error message is ignored" },
+            () => { Integrity.check(one = one, "Ignored error message") },
+            () => { Integrity.check(one == one) },
+            () => { Integrity.check(one == two, one, two) },
+            () => { Integrity.check(one == two, "Expected {} to be same as {}", one, two) },
+            () => { Integrity.check(one == two, "Strange", one, two) },
+            () => { return "If no {} then strings enclosed in quotes..." },
+            () => { Integrity.check(one == two, one, two, anObj, anArr, notTrue, aString) },
+            () => { Integrity.check(one == two, aString) },
+            () => { return "Note, first param not enclosed in quotes even if string" },
+            () => { Integrity.check(false, aString, aString) },
+            () => { Integrity.check(false, "Truncation occurs to stop messages getting too big", aString) },
+            () => { return "Note that truncation length is configurable (Integrity.stringTruncationLimit)" },
+            () => { Integrity.check(one == two, 
+                "" + Integrity.stringTruncationLimit + " chars is the limit after which truncation will occur") },
+            () => { Integrity.check(one == two, "not enough {}", aString, one, two, aString) },
+            () => { Integrity.check(null) },
+            () => { Integrity.check(undefined) },
+            () => { Integrity.check(null, "this message ignored") },
+            () => { Integrity.check(undefined, "this message ignored") },
+            () => {   },
+            () => { Integrity.checkNotNull(undefined, "undefined same as null") },
+            () => { Integrity.checkNotNull(undefined) },
+            () => { Integrity.checkNotNull(null) },
+            () => { },
+            () => { Integrity.checkIsBool(null, "Expected a bool...") },
+            () => { Integrity.checkIsBool(undefined, "Expected a bool...") },
+            () => { Integrity.checkIsBool(1) },
+            () => { Integrity.checkIsBool(null) },
+            () => { Integrity.checkIsBool(undefined) },
+            () => { Integrity.checkIsBool(NaN) },
+            () => { Integrity.checkIsBool('1') },
+            () => { Integrity.checkIsBool(anObj) },
+            () => { Integrity.checkIsBool(anArr) },
+            () => { Integrity.checkIsBool(false) },
+            () => { Integrity.checkIsBool(true) },
+            () => { Integrity.checkIsBool(one == two) },
+            () => { },
+            () => { Integrity.checkIsValidNumber('') },
+            () => { Integrity.checkIsValidNumber('1') },
+            () => { Integrity.checkIsValidNumber(1) },
+            () => { Integrity.checkIsValidNumber(1 / 0) },
+            () => { Integrity.checkIsValidNumber(-1 * one / 0) },
+            () => { Integrity.checkIsValidNumber(0/0) },
+            () => { Integrity.checkIsValidNumber(true) },
+            () => { Integrity.checkIsValidNumber(anObj) },
+            () => { Integrity.checkIsValidNumber(null) },
+            () => { Integrity.checkIsValidNumber(undefined) },
+            () => { },
+            () => { Integrity.checkIsValidNumberOrNull(null) },
+            () => { Integrity.checkIsValidNumberOrNull(undefined) },
+            () => { },
+            () => { Integrity.checkIsString(1) },
+            () => { Integrity.checkIsString(null) },
+            () => { Integrity.checkIsString(undefined) },
+            () => { Integrity.checkIsString(notTrue) },
+            () => { Integrity.checkIsString('') },
+            () => { },
+            () => { Integrity.checkIsStringOrNull(null) },
+            () => { Integrity.checkIsStringOrNull(undefined) },
+            () => { Integrity.checkIsStringOrNull(0) },
+            () => { Integrity.checkIsStringOrNull(false) },
+            () => { },
+            () => { Integrity.checkIsStringOrNull(1) },
+            () => { Integrity.checkIsStringOrNull(null) },
+            () => { Integrity.checkIsStringOrNull(undefined) },
+            () => { Integrity.checkIsStringOrNull(notTrue) },
+            () => { Integrity.checkIsStringOrNull('') },
+            () => { },
+            () => { Integrity.checkStringNotNullOrEmpty(null) },
+            () => { Integrity.checkStringNotNullOrEmpty(undefined) },
+            () => { Integrity.checkStringNotNullOrEmpty('') },
+            () => { Integrity.checkStringNotNullOrEmpty(0) },
+            () => { Integrity.checkStringNotNullOrEmpty('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') },
+            () => { },
+            () => { Integrity.fail() },
+            () => { Integrity.fail("Well that didn't work") },
+            () => { Integrity.fail(one, two, notTrue, anArr, anObj) },
+            () => { Integrity.fail("a{}b{}cd{}ef{}gh{}i", one, two, notTrue, anArr, anObj) },
+            () => { Integrity.fail("a{}b{}", one, two, notTrue, anArr, anObj) },
+            () => { Integrity.fail("{}{}", "long string which will get truncated", "long string which will get truncated") },
+        ]
+
+        addRow('Function', 'Exception', 'Message')
+
+        for (let i = 0; i < snippets.length; i++) {
+            let snippet = snippets[i];
+            let functionText = "" + snippet
+            functionText = functionText.replace("() => {", "");
+            functionText = functionText.replace(" }", "");
+
+            functionText = functionText.replace(/\n/g, '<br/>');
+
+            try {
+                const ret = snippet()
+                if (typeof ret == 'string') {
+                    addCommentRow(ret.replace(/\n/g, '<br/>'))
+                } else {
+                    addRow(functionText, '', '')
+                }
+            } catch (e) {
+                addRow(functionText, e.name, e.message)
+            }
+        }
+
+    </script>
+</body>
+</html>
