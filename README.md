@@ -12,7 +12,7 @@ This library provides a simple way of performing runtime checks, with the follow
 
 General language independent information about 'Integrity checking' can be found here: https://risingtyde.github.io/
 
-You can see examples of what exceptins are thrown and what messages are generated here: https://risingtyde.github.io/sample.html
+You can see examples of what exceptions are thrown and what messages are generated here: https://risingtyde.github.io/sample.html
 
 # Usage
 
@@ -26,7 +26,7 @@ This library can be used in:
 
 Use npm to install it:
 
-cd into the root directory of yuor project, where the json.package file is, and do:
+cd into the root directory of your project, where the json.package file is, and do:
 ```
 > npm install integrity-check --save
 ```
