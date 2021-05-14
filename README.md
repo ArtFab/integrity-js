@@ -3,7 +3,7 @@
 This library provides a simple way of performing runtime checks, with the following features:
 
 * The building of the error messages is delayed until the check fails
-* You can pass any variables to make the error message out of
+* You can pass in any variables, which will be used to construct the message
 * Truncation (configurable) is used to make sure the error message does not get stupidly long 
 * You can optionally do substitution with {} if you want to control how the message is built
 * You don't have to provide anything for the error message in which case a default is used
